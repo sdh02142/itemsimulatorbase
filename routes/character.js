@@ -1,5 +1,7 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
+import jwt from 'jsonwebtoken';
+import authMiddleware from '../middlewares/auth.js';
 
 const router = express.Router();
 
@@ -19,7 +21,9 @@ router.post('/character/delete', (req, res) => {});
 router.get('/character/detail', (req, res) => {});
 
 // 6-3. [도전] "회원"에 귀속된 캐릭터를 생성하기
-router.post('/character/createfromuser', (req, res) => {});
+router.post('/character/createfromuser', authMiddleware, async (req, res) => {
+  console.log(`${JSON.stringify(req.accountInfo)}`);
+});
 
 // 6-4. [도전] "회원"에 귀속된 캐릭터를 삭제하기
 router.post('/character/createfrom', (req, res) => {});
