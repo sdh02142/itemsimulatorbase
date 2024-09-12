@@ -5,7 +5,7 @@ import accountRouter from './routes/account.js';
 
 const app = express();
 // [도전] 환경변수로 분리할 수 있지 않을까?
-const PORT = 3000;
+const PORT = 4885;
 
 app.use(express.json());
 
