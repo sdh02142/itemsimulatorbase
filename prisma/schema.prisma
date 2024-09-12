@@ -13,24 +13,70 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model item {
+model Characters {
+  characterId Int     @id @map("characterId")
+  userName    String  @map("userName")
+  nickName    String  @unique @map("nickName")
+  hp          Int     @map("hp") @default(500)
+  atk         Int     @map("atk") @default(100)
+  money       Int     @map("money") @default(10000)
+
+  account     Accounts @relation(fields: [userName], references: [userName], onDelete: Cascade)
+
+  @@map("Characters")
+}
+
+model Accounts {
+  accountId String  @id @map("accountId")
+  password  String  @map("password")
+  userName  String  @unique @map("userName")
+
+  character Characters[]
+
+  @@map("Accounts")
+}
+
+model Items {
   // itemCode: 정수형, 기본 키
-  itemCode  Int @id
-  itemName  String
-  atk       Int
-  price     Int
+  itemCode  Int     @unique @id @map("itemCode")
+  itemName  String  @unique @map("itemName")
+  hp        Int     @map("hp")
+  atk       Int     @map("atk")
+  price     Int     @map("price")
+
+  invens    Invens[]
+  equips    Equips[]
+
+  @@map("Items")
 }
 
-model character {
-  characterId Int @id
+model Invens {
+  invenId   Int      @id @unique @map("invenId")
+  itemCode  Int      @map("itemCode")
+  itemName  String   @map("itemName")
+  hp        Int      @map("hp")
+  atk       Int      @map("atk")
+  price     Int      @map("price")
+
+  item      Items    @relation(fields: [itemCode], references: [itemCode], onDelete: Cascade)
+
+  @@map("Invens")
 }
 
-model account {
-  accountId String @id
-  password  String
-  userName  String
-}
+model Equips {
+  equipId   Int      @id @unique @map("equipId")
+  invenId   Int      @map("invenId")
+  itemCode  Int      @map("itemCode")
+  itemName  String   @map("itemName")
+  hp        Int      @map("hp")
+  atk       Int      @map("atk")
+  price     Int      @map("price")
 
+  item      Items    @relation(fields: [itemCode], references: [itemCode], onDelete: Cascade)
+  // invens    Invens   @relation(fields: [invenId], references: [invenId], onDelete: Cascade)
+
+  @@map("Equips")
+}
 
 // 이 파일을 수정한 뒤엔 저장 후 터미널에 "npx prisma db push"를 실행해주세요.
 // 그리고 MYSQL의 database를 refresh 합니다.

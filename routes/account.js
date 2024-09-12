@@ -39,13 +39,13 @@ router.post('/account/join', async (req, res) => {
 
     // 단방향 암호화
     const hashedPassword = await bcrypt.hash(password, 10);
-    const existAccount = await prisma.account.findUnique({ where: { accountId: accountId } });
+    const existAccount = await prisma.Accounts.findUnique({ where: { accountId: accountId } });
     if (existAccount) {
       res.status(400).json({ error: '중복된 아이디' });
       return;
     }
 
-    const joinAccount = await prisma.account.create({
+    const joinAccount = await prisma.Accounts.create({
       data: { accountId: accountId, password: hashedPassword, userName: userName },
     });
     res
@@ -76,7 +76,7 @@ router.post('/account/login', async (req, res) => {
   const accountId = inputValue.accountId;
   const password = inputValue.password;
 
-  const account = await prisma.account.findUnique({ where: { accountId: accountId } });
+  const account = await prisma.Accounts.findUnique({ where: { accountId: accountId } });
   if (account == null) {
     res.status(400).json({ error: '존재하지 않는 ID' });
     return;
@@ -100,6 +100,7 @@ router.post('/account/login', async (req, res) => {
     account_info: {
       accountId: account.accountId,
       userName: account.userName,
+      accessToken: accessToken,
     },
   });
 });
